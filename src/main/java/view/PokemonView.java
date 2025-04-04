@@ -1,3 +1,5 @@
+package view;
+
 import controller.PokemonController;
 import model.Pokemon;
 
@@ -34,6 +36,7 @@ public class PokemonView extends JFrame {
         loadButton = new JButton("Load Collection");
         searchField = new JTextField(15);
         JButton searchButton = new JButton("Search");
+        // todo 更新为 fetch data 里面的所有type
         typeFilterComboBox = new JComboBox<>(new String[]{"All", "Fire", "Water", "Grass", "Electric"});
 
         controlPanel.add(fetchButton);
@@ -49,6 +52,7 @@ public class PokemonView extends JFrame {
         add(controlPanel, BorderLayout.NORTH);
 
         // Table
+        //todo。更新col
         String[] columnNames = {"ID", "Name", "Types", "HP", "Attack", "Defense", "Image"};
         pokemonTable = new JTable();
         JScrollPane scrollPane = new JScrollPane(pokemonTable);
@@ -64,11 +68,13 @@ public class PokemonView extends JFrame {
     }
 
     private void fetchPokemon() {
-        controller.fetchPokemonCollection(1, 20);
+        //todo 更新调用的number
+        controller.fetchPokemonCollection(1, 200);
         updateTable(controller.getPokemonCollection());
     }
 
     private void updateTable(List<Pokemon> pokemonList) {
+        //todo 更新这个model
         DefaultTableModel model = new DefaultTableModel(new String[]{"ID", "Name", "Types", "HP", "Attack", "Defense", "Image"}, 0);
         
         for (Pokemon pokemon : pokemonList) {

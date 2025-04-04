@@ -5,10 +5,10 @@ A Java application for managing and exploring Pokemon data using the PokeAPI.
 
 ## Features
 - Fetch Pokemon data from PokeAPI
-- View Pokemon collection
-- Search and filter Pokemon
-- Save/Load collections in JSON and CSV
-- Graphical User Interface with Swing
+- View Pokemon collection 11
+- Search and filter Pokemon (by other features)11
+- Save/Load collections in JSON and CSV 11
+- Graphical User Interface with Swing 11
 
 ## Prerequisites
 - Java 11 or higher

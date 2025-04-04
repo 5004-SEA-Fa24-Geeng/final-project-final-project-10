@@ -1,19 +1,19 @@
+import static org.junit.jupiter.api.Assertions.*;
 import controller.PokemonController;
 import model.Pokemon;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import service.PokemonApiService;
 
 import java.io.File;
 import java.util.List;
 
-import static org.junit.Assert.*;
 
 public class PokemonApplicationTest {
     private PokemonController controller;
     private PokemonApiService apiService;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         controller = new PokemonController();
         apiService = new PokemonApiService();
