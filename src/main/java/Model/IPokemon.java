@@ -1,30 +1,38 @@
 package Model;
 
-import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 
+/**
+ * Interface representing a Pokemon with essential properties.
+ */
 public interface IPokemon {
-    // Basic property getters
+    /**
+     * Gets the Pokemon's ID number.
+     * @return the Pokemon ID
+     */
     int getId();
+
+    /**
+     * Gets the Pokemon's name.
+     * @return the Pokemon name
+     */
     String getName();
+
+    /**
+     * Gets the URL to the Pokemon's image.
+     * @return the image URL
+     */
     String getImageUrl();
+
+    /**
+     * Gets the Pokemon's types.
+     * @return list of Pokemon types
+     */
     List<PokemonType> getTypes();
-    Map<StatCategory, Integer> getStats();
 
-    // Static Collection Management Methods (defined in implementing class)
-    static List<Pokemon> getCollection() { return null; }
-    static void clearCollection() {}
-    static void addToCollection(Pokemon pokemon) {}
-    static void addAllToCollection(List<Pokemon> pokemon) {}
-    static boolean removeFromCollection(Pokemon pokemon) { return false; }
-
-    // API Interaction Methods (defined in implementing class)
-    static Pokemon fetchById(int id) throws IOException, InterruptedException { return null; }
-    static List<Pokemon> fetchMultiple(int startId, int count) { return null; }
-
-    // File Handling Methods (defined in implementing class)
-    static void saveToJson(String filename) throws IOException {}
-    static void loadFromJson(String filename) throws IOException {}
-
+    /**
+     * Gets the Pokemon's stats.
+     * @return the Pokemon's stats
+     */
+    Pokemon.PokemonStats getStats();
 }
