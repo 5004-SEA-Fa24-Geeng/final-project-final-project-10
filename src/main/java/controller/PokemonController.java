@@ -1,7 +1,7 @@
 package controller;
 
-import model.Pokemon;
-import model.PokemonType;
+import Model.Pokemon;
+import Model.PokemonType;
 import service.PokemonApiService;
 import service.FileHandlingService;
 

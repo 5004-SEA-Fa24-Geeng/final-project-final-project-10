@@ -1,8 +1,8 @@
 package controller;
 
 
-import model.IPokemon;
-import model.Pokemon;
+import Model.IPokemon;
+import Model.Pokemon;
 
 public class PokemonApp {
 
