@@ -4,11 +4,45 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0c391c74-eaca-48da-b8a6-278580e3afdf" name="Changes" comment="" />
+    <list default="true" id="0c391c74-eaca-48da-b8a6-278580e3afdf" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/java/controller/IPokemonController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/controller/PokemonApp.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Model/IPokemon.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Model/IPokemon.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Model/Pokemon.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Model/Pokemon.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Model/PokemonCollection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Model/PokemonCollection.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Model/PokemonType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Model/PokemonType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Model/StatCategory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Model/StatCategory.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/controller/PokemonController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controller/PokemonController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/view/PokemonView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/view/PokemonView.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ExternalProjectsManager">
+    <system id="GRADLE">
+      <state>
+        <task path="$PROJECT_DIR$">
+          <activation />
+        </task>
+        <projects_view />
+      </state>
+    </system>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Merge.Settings">
+    <option name="BRANCH" value="jenny_branch" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="ProjectId" id="2uoyuXTrrxz9tGq5ovcyTxcrBZN" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
@@ -19,6 +53,8 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "xinyi-hu-branch",
+    "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm"
   }
 }]]></component>

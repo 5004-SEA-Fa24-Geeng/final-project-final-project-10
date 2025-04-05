@@ -1,6 +1,7 @@
 package controller;
 
 import model.Pokemon;
+import model.PokemonType;
 import service.PokemonApiService;
 import service.FileHandlingService;
 
@@ -10,52 +11,72 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class PokemonController {
+public class PokemonController implements IPokemonController {
     private PokemonApiService apiService;
     private FileHandlingService fileService;
-    private List<Pokemon> pokemonCollection;
+    private List<Pokemon> currentPokemonList;
 
     public PokemonController() {
         this.apiService = new PokemonApiService();
         this.fileService = new FileHandlingService();
-        this.pokemonCollection = new ArrayList<>();
+        this.currentPokemonList = new ArrayList<>();
     }
 
-    public void fetchPokemonCollection(int startId, int count) {
-        this.pokemonCollection = apiService.fetchMultiplePokemon(startId, count);
+    @Override
+    public void fetchInitialPokemon(int count) {
+        this.currentPokemonList = apiService.fetchMultiplePokemon(1, count);
     }
 
+    @Override
     public List<Pokemon> getPokemonCollection() {
-        return new ArrayList<>(pokemonCollection);
+        return new ArrayList<>(currentPokemonList);
     }
 
-    public void saveCollectionToJson(String filename) throws IOException {
-        fileService.saveToJson(pokemonCollection, filename);
+    @Override
+    public void saveCollection(String filename) {
+        try {
+            fileService.saveToJson(currentPokemonList, filename);
+        } catch (IOException e) {
+            System.err.println("Error saving collection: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
-    public void saveCollectionToCSV(String filename) throws IOException {
-        fileService.saveToCSV(pokemonCollection, filename);
+    @Override
+    public void loadCollection(String filename) {
+        try {
+            this.currentPokemonList = fileService.loadFromJson(filename);
+        } catch (IOException e) {
+            System.err.println("Error loading collection: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
-    public void loadCollectionFromJson(String filename) throws IOException {
-        this.pokemonCollection = fileService.loadFromJson(filename);
-    }
-
+    @Override
     public List<Pokemon> searchPokemon(String searchTerm) {
-        return pokemonCollection.stream()
+        return currentPokemonList.stream()
                 .filter(p -> p.getName().toLowerCase().contains(searchTerm.toLowerCase()))
                 .collect(Collectors.toList());
     }
 
     public List<Pokemon> sortPokemonByName() {
-        return pokemonCollection.stream()
+        return currentPokemonList.stream()
                 .sorted(Comparator.comparing(Pokemon::getName))
                 .collect(Collectors.toList());
     }
 
-    public List<Pokemon> filterPokemonByType(String type) {
-        return pokemonCollection.stream()
-                .filter(p -> p.getTypes().contains(type.toLowerCase()))
+    @Override
+    public List<Pokemon> filterPokemonByType(PokemonType type) {
+        return currentPokemonList.stream()
+                .filter(p -> p.getTypes().contains(type))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public Pokemon getPokemonById(int id) {
+        return currentPokemonList.stream()
+                .filter(p -> p.getId() == id)
+                .findFirst()
+                .orElse(null);
     }
 }
