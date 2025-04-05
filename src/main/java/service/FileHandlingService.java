@@ -6,6 +6,7 @@ import Model.Pokemon;
 
 import java.io.*;
 import java.lang.reflect.Type;
+import java.util.Arrays;
 import java.util.List;
 
 public class FileHandlingService {
@@ -37,7 +38,7 @@ public class FileHandlingService {
                 writer.println(String.format("%d,%s,%s,%d,%d,%d,%d,%d,%d",
                         pokemon.getId(),
                         pokemon.getName(),
-                        String.join("|", pokemon.getTypes()),
+                        Arrays.asList(pokemon.getTypes()),
                         pokemon.getStats().getHp(),
                         pokemon.getStats().getAttack(),
                         pokemon.getStats().getDefense(),
