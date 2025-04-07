@@ -2,29 +2,41 @@ package controller;
 
 import Model.Pokemon;
 import Model.PokemonType;
-import service.PokemonApiService;
-import service.FileHandlingService;
+import Model.IPokemon;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class PokemonController implements IPokemonController {
-    private PokemonApiService apiService;
-    private FileHandlingService fileService;
+    private IPokemon model;
     private List<Pokemon> currentPokemonList;
+    private IPokemon view;
 
-    public PokemonController() {
-        this.apiService = new PokemonApiService();
-        this.fileService = new FileHandlingService();
+    /**
+     * Constructor for the PokemonController
+     * @param model The model to use for data operations
+     */
+    public PokemonController(IPokemon model) {
+        this.model = model;
         this.currentPokemonList = new ArrayList<>();
+    }
+
+    /**
+     * Sets the view for this controller
+     * @param view The view to update
+     */
+    public void setView(IPokemon view) {
+        this.view = view;
     }
 
     @Override
     public void fetchInitialPokemon(int count) {
-        this.currentPokemonList = apiService.fetchMultiplePokemon(1, count);
+        this.currentPokemonList = model.fetchMultiplePokemon(count);
+        if (view != null) {
+            view.updatePokemonList(currentPokemonList);
+        }
     }
 
     @Override
@@ -34,42 +46,45 @@ public class PokemonController implements IPokemonController {
 
     @Override
     public void saveCollection(String filename) {
-        try {
-            fileService.saveToJson(currentPokemonList, filename);
-        } catch (IOException e) {
-            System.err.println("Error saving collection: " + e.getMessage());
-            e.printStackTrace();
-        }
+        model.saveCollection(currentPokemonList, filename);
     }
 
     @Override
     public void loadCollection(String filename) {
-        try {
-            this.currentPokemonList = fileService.loadFromJson(filename);
-        } catch (IOException e) {
-            System.err.println("Error loading collection: " + e.getMessage());
-            e.printStackTrace();
+        this.currentPokemonList = model.loadCollection(filename);
+        if (view != null) {
+            view.updatePokemonList(currentPokemonList);
         }
     }
 
     @Override
     public List<Pokemon> searchPokemon(String searchTerm) {
-        return currentPokemonList.stream()
+        List<Pokemon> results = currentPokemonList.stream()
                 .filter(p -> p.getName().toLowerCase().contains(searchTerm.toLowerCase()))
                 .collect(Collectors.toList());
+
+        return results;
     }
 
+    /**
+     * Sorts the current Pokemon list by name
+     * @return Sorted list of Pokemon
+     */
     public List<Pokemon> sortPokemonByName() {
-        return currentPokemonList.stream()
+        List<Pokemon> sortedList = currentPokemonList.stream()
                 .sorted(Comparator.comparing(Pokemon::getName))
                 .collect(Collectors.toList());
+
+        return sortedList;
     }
 
     @Override
     public List<Pokemon> filterPokemonByType(PokemonType type) {
-        return currentPokemonList.stream()
+        List<Pokemon> filteredList = currentPokemonList.stream()
                 .filter(p -> p.getTypes().contains(type))
                 .collect(Collectors.toList());
+
+        return filteredList;
     }
 
     @Override
