@@ -19,6 +19,10 @@ public class MainPokemonFrame extends JFrame implements IPokemonView {
     private JPanel listPanel; // Placeholder for PokemonListPanel
     private JPanel detailPanel; // Placeholder for PokemonDetailPanel
 
+    // Uncomment these lines when implementing actual panels
+    // private PokemonListPanel pokemonListPanel;
+    // private PokemonDetailPanel pokemonDetailPanel;
+
     /**
      * Constructor that initializes the frame with a controller reference.
      *
@@ -42,6 +46,14 @@ public class MainPokemonFrame extends JFrame implements IPokemonView {
         // Create temporary panels (will be replaced with actual implementations)
         listPanel = createTemporaryListPanel();
         detailPanel = createTemporaryDetailPanel();
+
+        // Uncomment these lines if you're implementing/testing PokemonListPanel
+        // pokemonListPanel = new PokemonListPanel(controller);
+        // setListPanel(pokemonListPanel);
+
+        // Uncomment these lines if you're implementing/testing PokemonDetailPanel
+        // pokemonDetailPanel = new PokemonDetailPanel(controller);
+        // setDetailPanel(pokemonDetailPanel);
 
         // Set up layout
         setLayout(new BorderLayout());
@@ -112,9 +124,15 @@ public class MainPokemonFrame extends JFrame implements IPokemonView {
      */
     @Override
     public void updatePokemonList(List<Pokemon> pokemonList) {
-        // Temporary implementation until PokemonListPanel is created
         System.out.println("Pokemon list updated with " + pokemonList.size() + " Pokemon.");
 
+        // Delegate to the actual PokemonListPanel if it exists
+        // if (pokemonListPanel != null) {
+        //     pokemonListPanel.updateTable(pokemonList);
+        //     return;
+        // }
+
+        // When implementing/testing PokemonListPanel, comment out or delete the temporary implementation below
         // Add a display of the first few Pokemon to the temporary panel for visual feedback
         if (!pokemonList.isEmpty()) {
             StringBuilder sb = new StringBuilder("<html><center>Pokemon Available:<br>");
@@ -140,9 +158,15 @@ public class MainPokemonFrame extends JFrame implements IPokemonView {
      */
     @Override
     public void showPokemonDetails(Pokemon pokemon) {
-        // Temporary implementation until PokemonDetailPanel is created
         System.out.println("Showing details for Pokemon: " + pokemon.getName());
 
+        // Delegate to the actual PokemonDetailPanel if it exists
+        // if (pokemonDetailPanel != null) {
+        //     pokemonDetailPanel.displayPokemonDetails(pokemon);
+        //     return;
+        // }
+
+        // When implementing/testing PokemonDetailPanel, comment out or delete the temporary implementation below
         // Add some basic Pokemon info to the temporary panel
         if (pokemon != null) {
             StringBuilder sb = new StringBuilder("<html><center>");
@@ -179,6 +203,11 @@ public class MainPokemonFrame extends JFrame implements IPokemonView {
             ((JScrollPane) parent).setViewportView(pokemonListPanel);
         }
         this.listPanel = pokemonListPanel;
+
+        // Uncomment when implementing actual PokemonListPanel
+        // if (pokemonListPanel instanceof PokemonListPanel) {
+        //     this.pokemonListPanel = (PokemonListPanel) pokemonListPanel;
+        // }
     }
 
     /**
@@ -193,5 +222,10 @@ public class MainPokemonFrame extends JFrame implements IPokemonView {
             ((JScrollPane) parent).setViewportView(pokemonDetailPanel);
         }
         this.detailPanel = pokemonDetailPanel;
+
+        // Uncomment when implementing actual PokemonDetailPanel
+        // if (pokemonDetailPanel instanceof PokemonDetailPanel) {
+        //     this.pokemonDetailPanel = (PokemonDetailPanel) pokemonDetailPanel;
+        // }
     }
 }
