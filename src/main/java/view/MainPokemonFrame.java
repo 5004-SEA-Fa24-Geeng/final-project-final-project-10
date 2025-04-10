@@ -21,7 +21,7 @@ public class MainPokemonFrame extends JFrame implements IPokemonView {
 
     // Uncomment these lines when implementing actual panels
     // private PokemonListPanel pokemonListPanel;
-    // private PokemonDetailPanel pokemonDetailPanel;
+    private PokemonDetailPanel pokemonDetailPanel;
 
     /**
      * Constructor that initializes the frame with a controller reference.
@@ -45,15 +45,15 @@ public class MainPokemonFrame extends JFrame implements IPokemonView {
 
         // Create temporary panels (will be replaced with actual implementations)
         listPanel = createTemporaryListPanel();
-        detailPanel = createTemporaryDetailPanel();
+        // detailPanel = createTemporaryDetailPanel();
 
         // Uncomment these lines if you're implementing/testing PokemonListPanel
         // pokemonListPanel = new PokemonListPanel(controller);
         // setListPanel(pokemonListPanel);
 
         // Uncomment these lines if you're implementing/testing PokemonDetailPanel
-        // pokemonDetailPanel = new PokemonDetailPanel(controller);
-        // setDetailPanel(pokemonDetailPanel);
+        pokemonDetailPanel = new PokemonDetailPanel(controller);
+        detailPanel = pokemonDetailPanel;
 
         // Set up layout
         setLayout(new BorderLayout());
@@ -161,71 +161,9 @@ public class MainPokemonFrame extends JFrame implements IPokemonView {
         System.out.println("Showing details for Pokemon: " + pokemon.getName());
 
         // Delegate to the actual PokemonDetailPanel if it exists
-        // if (pokemonDetailPanel != null) {
-        //     pokemonDetailPanel.displayPokemonDetails(pokemon);
-        //     return;
-        // }
-
-        // When implementing/testing PokemonDetailPanel, comment out or delete the temporary implementation below
-        // Add some basic Pokemon info to the temporary panel
-        if (pokemon != null) {
-            StringBuilder sb = new StringBuilder("<html><center>");
-            sb.append("<h2>").append(pokemon.getName()).append("</h2>");
-            sb.append("ID: ").append(pokemon.getId()).append("<br>");
-            sb.append("Types: ");
-            pokemon.getTypes().forEach(type -> sb.append(type).append(" "));
-            sb.append("<br><br>Stats:<br>");
-            sb.append("HP: ").append(pokemon.getStats().getHp()).append("<br>");
-            sb.append("Attack: ").append(pokemon.getStats().getAttack()).append("<br>");
-            sb.append("Defense: ").append(pokemon.getStats().getDefense()).append("<br>");
-            sb.append("Special Attack: ").append(pokemon.getStats().getSpecialAttack()).append("<br>");
-            sb.append("Special Defense: ").append(pokemon.getStats().getSpecialDefense()).append("<br>");
-            sb.append("Speed: ").append(pokemon.getStats().getSpeed()).append("<br>");
-            sb.append("</center></html>");
-
-            JLabel detailsLabel = new JLabel(sb.toString(), SwingConstants.CENTER);
-            detailPanel.removeAll();
-            detailPanel.add(detailsLabel, BorderLayout.CENTER);
-            detailPanel.revalidate();
-            detailPanel.repaint();
-        }
-    }
-
-    /**
-     * Future method to set the actual list panel once implemented.
-     *
-     * @param pokemonListPanel the implemented list panel
-     */
-    public void setListPanel(JPanel pokemonListPanel) {
-        // This will be called once the PokemonListPanel is implemented
-        Container parent = listPanel.getParent();
-        if (parent instanceof JScrollPane) {
-            ((JScrollPane) parent).setViewportView(pokemonListPanel);
-        }
-        this.listPanel = pokemonListPanel;
-
-        // Uncomment when implementing actual PokemonListPanel
-        // if (pokemonListPanel instanceof PokemonListPanel) {
-        //     this.pokemonListPanel = (PokemonListPanel) pokemonListPanel;
-        // }
-    }
-
-    /**
-     * Future method to set the actual detail panel once implemented.
-     *
-     * @param pokemonDetailPanel the implemented detail panel
-     */
-    public void setDetailPanel(JPanel pokemonDetailPanel) {
-        // This will be called once the PokemonDetailPanel is implemented
-        Container parent = detailPanel.getParent();
-        if (parent instanceof JScrollPane) {
-            ((JScrollPane) parent).setViewportView(pokemonDetailPanel);
-        }
-        this.detailPanel = pokemonDetailPanel;
-
-        // Uncomment when implementing actual PokemonDetailPanel
-        // if (pokemonDetailPanel instanceof PokemonDetailPanel) {
-        //     this.pokemonDetailPanel = (PokemonDetailPanel) pokemonDetailPanel;
-        // }
+         if (pokemonDetailPanel != null) {
+             pokemonDetailPanel.displayPokemonDetails(pokemon);
+             return;
+         }
     }
 }
