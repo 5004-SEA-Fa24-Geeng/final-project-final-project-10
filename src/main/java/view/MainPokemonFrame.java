@@ -39,32 +39,32 @@ public class MainPokemonFrame extends JFrame implements IPokemonView {
         setSize(1000, 600);
         setLocationRelativeTo(null);
 
+        // Set up the main layout
+        setLayout(new BorderLayout());
+
         // Add logo with error handling
         try {
-            ImageIcon logoIcon = new ImageIcon(getClass().getResource("/pokemon_logo.png"));
+            // Use absolute path to resources directory
+            ImageIcon logoIcon = new ImageIcon("src/main/resources/pokemon_logo.png");
             if (logoIcon.getImage().getWidth(null) == -1) {
                 System.err.println("Failed to load pokemon_logo.png - using text fallback");
                 createStyledTitle();
-                return;
+            } else {
+                // Scale the image to a reasonable size (adjust width as needed)
+                Image scaledImage = logoIcon.getImage().getScaledInstance(300, -1, Image.SCALE_SMOOTH);
+                JLabel logoLabel = new JLabel(new ImageIcon(scaledImage));
+                logoLabel.setHorizontalAlignment(SwingConstants.CENTER);
+                logoLabel.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
+                
+                JPanel logoPanel = new JPanel(new BorderLayout());
+                logoPanel.setBackground(new Color(245, 245, 255));
+                logoPanel.add(logoLabel, BorderLayout.CENTER);
+                add(logoPanel, BorderLayout.NORTH);
             }
-            
-            // Scale the image to a reasonable size (adjust width as needed)
-            Image scaledImage = logoIcon.getImage().getScaledInstance(300, -1, Image.SCALE_SMOOTH);
-            JLabel logoLabel = new JLabel(new ImageIcon(scaledImage));
-            logoLabel.setHorizontalAlignment(SwingConstants.CENTER);
-            logoLabel.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
-            
-            JPanel logoPanel = new JPanel(new BorderLayout());
-            logoPanel.setBackground(new Color(245, 245, 255));
-            logoPanel.add(logoLabel, BorderLayout.CENTER);
-            add(logoPanel, BorderLayout.NORTH);
         } catch (Exception e) {
             System.err.println("Error loading logo: " + e.getMessage());
             createStyledTitle();
         }
-
-        // Set up the main layout
-        setLayout(new BorderLayout());
 
         // Create split pane for list and detail panels
         JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
@@ -75,7 +75,7 @@ public class MainPokemonFrame extends JFrame implements IPokemonView {
         listPanel = new PokemonListPanel(controller);
         detailPanel = new PokemonDetailPanel(controller);
         
-        // Add panels to split pane - PokemonListPanel has internal scrolling
+        // Add panels to split pane
         splitPane.setLeftComponent(listPanel);
         splitPane.setRightComponent(detailPanel);
 
