@@ -1,5 +1,3 @@
-package entry;
-
 import controller.IPokemonController;
 import controller.PokemonController;
 import Model.IPokemonModel;

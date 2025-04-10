@@ -15,13 +15,9 @@ public class MainPokemonFrame extends JFrame implements IPokemonView {
 
     private IPokemonController controller;
 
-    // These will be replaced with actual implementations later
-    private JPanel listPanel; // Placeholder for PokemonListPanel
-    private JPanel detailPanel; // Placeholder for PokemonDetailPanel
-
     // Uncomment these lines when implementing actual panels
-    // private PokemonListPanel pokemonListPanel;
-    private PokemonDetailPanel pokemonDetailPanel;
+    private PokemonListPanel listPanel;
+    private PokemonDetailPanel detailPanel;
 
     /**
      * Constructor that initializes the frame with a controller reference.
@@ -41,71 +37,68 @@ public class MainPokemonFrame extends JFrame implements IPokemonView {
         setTitle("Pokemon Collection Manager");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(1000, 600);
-        setLocationRelativeTo(null); // Center on screen
+        setLocationRelativeTo(null);
 
-        // Create temporary panels (will be replaced with actual implementations)
-        listPanel = createTemporaryListPanel();
-        // detailPanel = createTemporaryDetailPanel();
+        // Add logo with error handling
+        try {
+            ImageIcon logoIcon = new ImageIcon(getClass().getResource("/pokemon_logo.png"));
+            if (logoIcon.getImage().getWidth(null) == -1) {
+                System.err.println("Failed to load pokemon_logo.png - using text fallback");
+                createStyledTitle();
+                return;
+            }
+            
+            // Scale the image to a reasonable size (adjust width as needed)
+            Image scaledImage = logoIcon.getImage().getScaledInstance(300, -1, Image.SCALE_SMOOTH);
+            JLabel logoLabel = new JLabel(new ImageIcon(scaledImage));
+            logoLabel.setHorizontalAlignment(SwingConstants.CENTER);
+            logoLabel.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
+            
+            JPanel logoPanel = new JPanel(new BorderLayout());
+            logoPanel.setBackground(new Color(245, 245, 255));
+            logoPanel.add(logoLabel, BorderLayout.CENTER);
+            add(logoPanel, BorderLayout.NORTH);
+        } catch (Exception e) {
+            System.err.println("Error loading logo: " + e.getMessage());
+            createStyledTitle();
+        }
 
-        // Uncomment these lines if you're implementing/testing PokemonListPanel
-        // pokemonListPanel = new PokemonListPanel(controller);
-        // setListPanel(pokemonListPanel);
-
-        // Uncomment these lines if you're implementing/testing PokemonDetailPanel
-        pokemonDetailPanel = new PokemonDetailPanel(controller);
-        detailPanel = pokemonDetailPanel;
-
-        // Set up layout
+        // Set up the main layout
         setLayout(new BorderLayout());
 
-        // Split pane to divide list and detail views
-        JSplitPane splitPane = new JSplitPane(
-                JSplitPane.HORIZONTAL_SPLIT,
-                new JScrollPane(listPanel),
-                new JScrollPane(detailPanel)
-        );
+        // Create split pane for list and detail panels
+        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
+        splitPane.setResizeWeight(0.3); // Give 30% space to list panel
         splitPane.setDividerLocation(500); // Set initial divider position
+
+        // Initialize panels
+        listPanel = new PokemonListPanel(controller);
+        detailPanel = new PokemonDetailPanel(controller);
+        
+        // Add panels to split pane - PokemonListPanel has internal scrolling
+        splitPane.setLeftComponent(listPanel);
+        splitPane.setRightComponent(detailPanel);
 
         // Add split pane to frame
         add(splitPane, BorderLayout.CENTER);
+
+        // Set up Pokemon selection listener
+        listPanel.setPokemonSelectionListener(this::showPokemonDetails);
     }
 
     /**
-     * Creates a temporary list panel as a placeholder.
-     *
-     * @return a basic panel with placeholder text
+     * Creates a styled title as a fallback when logo can't be loaded.
      */
-    private JPanel createTemporaryListPanel() {
-        JPanel panel = new JPanel(new BorderLayout());
-        panel.setBorder(BorderFactory.createTitledBorder("Pokemon List"));
-
-        JLabel placeholderLabel = new JLabel(
-                "<html><center>Pokemon List Panel<br>Will be implemented soon</center></html>",
-                SwingConstants.CENTER
-        );
-        placeholderLabel.setFont(new Font("Arial", Font.ITALIC, 14));
-        panel.add(placeholderLabel, BorderLayout.CENTER);
-
-        return panel;
-    }
-
-    /**
-     * Creates a temporary detail panel as a placeholder.
-     *
-     * @return a basic panel with placeholder text
-     */
-    private JPanel createTemporaryDetailPanel() {
-        JPanel panel = new JPanel(new BorderLayout());
-        panel.setBorder(BorderFactory.createTitledBorder("Pokemon Details"));
-
-        JLabel placeholderLabel = new JLabel(
-                "<html><center>Pokemon Detail Panel<br>Will be implemented soon</center></html>",
-                SwingConstants.CENTER
-        );
-        placeholderLabel.setFont(new Font("Arial", Font.ITALIC, 14));
-        panel.add(placeholderLabel, BorderLayout.CENTER);
-
-        return panel;
+    private void createStyledTitle() {
+        JLabel titleLabel = new JLabel("Pokédex", SwingConstants.CENTER);
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 32));
+        titleLabel.setForeground(new Color(30, 55, 153));  // Pokemon blue color
+        titleLabel.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 0));
+        
+        JPanel titlePanel = new JPanel(new BorderLayout());
+        titlePanel.setBackground(new Color(245, 245, 255));
+        titlePanel.add(titleLabel, BorderLayout.CENTER);
+        add(titlePanel, BorderLayout.NORTH);
     }
 
     /**
@@ -125,29 +118,7 @@ public class MainPokemonFrame extends JFrame implements IPokemonView {
     @Override
     public void updatePokemonList(List<Pokemon> pokemonList) {
         System.out.println("Pokemon list updated with " + pokemonList.size() + " Pokemon.");
-
-        // Delegate to the actual PokemonListPanel if it exists
-        // if (pokemonListPanel != null) {
-        //     pokemonListPanel.updateTable(pokemonList);
-        //     return;
-        // }
-
-        // When implementing/testing PokemonListPanel, comment out or delete the temporary implementation below
-        // Add a display of the first few Pokemon to the temporary panel for visual feedback
-        if (!pokemonList.isEmpty()) {
-            StringBuilder sb = new StringBuilder("<html><center>Pokemon Available:<br>");
-            int displayCount = Math.min(50, pokemonList.size());
-            for (int i = 0; i < displayCount; i++) {
-                sb.append(pokemonList.get(i).getName()).append("<br>");
-            }
-            sb.append("</center></html>");
-
-            JLabel infoLabel = new JLabel(sb.toString(), SwingConstants.CENTER);
-            listPanel.removeAll();
-            listPanel.add(infoLabel, BorderLayout.CENTER);
-            listPanel.revalidate();
-            listPanel.repaint();
-        }
+        listPanel.updatePokemonList(pokemonList);
     }
 
     /**
@@ -160,10 +131,8 @@ public class MainPokemonFrame extends JFrame implements IPokemonView {
     public void showPokemonDetails(Pokemon pokemon) {
         System.out.println("Showing details for Pokemon: " + pokemon.getName());
 
-        // Delegate to the actual PokemonDetailPanel if it exists
-         if (pokemonDetailPanel != null) {
-             pokemonDetailPanel.displayPokemonDetails(pokemon);
-             return;
+         if (detailPanel != null) {
+             detailPanel.displayPokemonDetails(pokemon);
          }
     }
 }

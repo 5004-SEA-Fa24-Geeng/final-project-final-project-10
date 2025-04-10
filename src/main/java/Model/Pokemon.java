@@ -128,17 +128,13 @@ public class Pokemon implements IPokemon, Serializable {
     public void setStats(PokemonStats stats) { this.stats = stats; }
 
     /**
-     * Returns a string representation of the Pokemon.
+     * Returns a formatted string representation of the Pokemon.
+     * Used for display in UI components.
      *
-     * @return string with Pokemon details
+     * @return the Pokemon's formatted ID and name
      */
     @Override
     public String toString() {
-        return "Pokemon{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", types=" + types +
-                ", stats=" + stats +
-                '}';
+        return String.format("#%03d - %s", getId(), getName().toUpperCase());
     }
 }
