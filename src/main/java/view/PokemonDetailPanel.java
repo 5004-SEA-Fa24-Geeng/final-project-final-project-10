@@ -6,6 +6,7 @@ import controller.IPokemonController;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -77,6 +78,7 @@ public class PokemonDetailPanel extends JPanel {
         // Set panel properties
         setBorder(BorderFactory.createEmptyBorder(15, 10, 20, 10));
         setLayout(new BorderLayout(10, 10));
+        setBackground(new Color(245, 245, 255));
 
         // Create name label at the top
         nameLabel = new JLabel("Loading Pokemon data...");
@@ -86,10 +88,12 @@ public class PokemonDetailPanel extends JPanel {
 
         // Create center panel with image and info side by side
         JPanel centerPanel = new JPanel(new BorderLayout(15, 0));
+        centerPanel.setBackground(new Color(245, 245, 255));
 
         // Image panel on the left
         JPanel imagePanel = new JPanel(new BorderLayout());
         imagePanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        imagePanel.setBackground(Color.WHITE);
 
         // Add a label for image panel to display the Pokemon image
         imageLabel = new JLabel();
@@ -104,6 +108,7 @@ public class PokemonDetailPanel extends JPanel {
         infoPanel = new JPanel();
         infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.Y_AXIS));
         infoPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 10));
+        infoPanel.setBackground(new Color(245, 245, 255));
 
         // Add placeholder content for info panel
         JLabel placeholderLabel = new JLabel("No Pokemon selected");
@@ -117,9 +122,12 @@ public class PokemonDetailPanel extends JPanel {
         // Create stats panel at the bottom
         statsPanel = new JPanel();
         statsPanel.setLayout(new BoxLayout(statsPanel, BoxLayout.Y_AXIS));
-        statsPanel.setBorder(BorderFactory.createTitledBorder("Stats"));
+        TitledBorder titledBorder = BorderFactory.createTitledBorder("Stats");
+        titledBorder.setTitleFont(new Font("SansSerif", Font.BOLD, 16));
+        statsPanel.setBorder(titledBorder);
         statsPanel.setMinimumSize(new Dimension(0, 200));
         statsPanel.setPreferredSize(new Dimension(0, 200));
+        statsPanel.setBackground(new Color(245, 245, 255));
         add(statsPanel, BorderLayout.SOUTH);
     }
 
@@ -162,6 +170,7 @@ public class PokemonDetailPanel extends JPanel {
     private JPanel createStatsChart(Pokemon.PokemonStats stats) {
         JPanel chartPanel = new JPanel(new GridLayout(6, 1, 0, 8));
         chartPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        chartPanel.setBackground(new Color(245, 245, 255));
 
         // Max stat value for scaling (255 is the max possible in Pokemon games)
         final int MAX_STAT = 255;
@@ -188,15 +197,21 @@ public class PokemonDetailPanel extends JPanel {
      */
     private void addStatBar(JPanel panel, String statName, int statValue, int maxValue, Color barColor) {
         JPanel statPanel = new JPanel(new BorderLayout(10, 0));
+        statPanel.setBackground(new Color(245, 245, 255));
+        statPanel.setOpaque(true);
 
         // Add stat name label
         JLabel nameLabel = new JLabel(statName);
         nameLabel.setPreferredSize(new Dimension(110, 20));
+        nameLabel.setBackground(new Color(245, 245, 255));
+        nameLabel.setOpaque(true);
         statPanel.add(nameLabel, BorderLayout.WEST);
 
         // Add stat value label
         JLabel valueLabel = new JLabel(String.valueOf(statValue));
         valueLabel.setPreferredSize(new Dimension(30, 20));
+        valueLabel.setOpaque(true);
+        valueLabel.setBackground(new Color(245, 245, 255));
         statPanel.add(valueLabel, BorderLayout.EAST);
 
         // Draw bar for visualization
@@ -204,6 +219,7 @@ public class PokemonDetailPanel extends JPanel {
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
+                setBackground(Color.WHITE);
                 int width = (int) ((double) statValue / maxValue * getWidth());
                 g.setColor(barColor);
                 g.fillRect(0, 0, width, getHeight());
@@ -240,6 +256,7 @@ public class PokemonDetailPanel extends JPanel {
         // Create types panel to hold the type tags
         JPanel typesPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         typesPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        typesPanel.setBackground(new Color(245, 245, 255));
 
         List<PokemonType> types = pokemon.getTypes();
         for (PokemonType type : types) {
