@@ -12,6 +12,10 @@ import java.util.function.Consumer;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.stream.Collectors;
+import java.io.File;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseAdapter;
 
 /**
  * Panel for displaying a list of Pokemon.
@@ -19,17 +23,18 @@ import java.util.stream.Collectors;
  */
 public class PokemonListPanel extends JPanel {
     private final IPokemonController controller;
-    private final DefaultListModel<Pokemon> listModel;
-    private final JList<Pokemon> pokemonList;
+    private final DefaultListModel<CheckBoxListItem> listModel;
+    private final JList<CheckBoxListItem> pokemonList;
     private Consumer<Pokemon> selectionListener;
     private List<Pokemon> fullPokemonList; // Store the complete list
     private JTextField searchField;
     private JComboBox<PokemonType> typeFilter;
     private JComboBox<SortOption> sortOptions;
-    private JButton loadMoreButton;
-    private JButton exportButton;
+    private JButton saveButton;
     private int currentPage = 0;
     private static final int PAGE_SIZE = 20;
+    private int nextTeamNumber = 1;  // For auto-incrementing file names
+    private JLabel viewingLabel;
 
     // Add enum for sort options
     private enum SortOption {
@@ -71,10 +76,10 @@ public class PokemonListPanel extends JPanel {
         JPanel controlPanel = createControlPanel();
         add(controlPanel, BorderLayout.NORTH);
 
-        // Configure the JList with custom renderer
+        // Configure the JList with checkbox renderer
         configureList();
 
-        // Bottom panel with load more and export buttons
+        // Bottom panel with only save button
         JPanel bottomPanel = createBottomPanel();
         add(bottomPanel, BorderLayout.SOUTH);
     }
@@ -93,6 +98,12 @@ public class PokemonListPanel extends JPanel {
         titleLabel.setForeground(new Color(51, 51, 51));
         titleLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));
         topPanel.add(titleLabel, BorderLayout.NORTH);
+
+        // Add viewing label
+        viewingLabel = new JLabel("Currently Viewing: All Pokémon", SwingConstants.CENTER);
+        viewingLabel.setFont(new Font("Arial", Font.ITALIC, 12));
+        viewingLabel.setForeground(new Color(100, 100, 100));
+        topPanel.add(viewingLabel, BorderLayout.SOUTH);
 
         // Search panel with icon
         JPanel searchPanel = createSearchPanel();
@@ -124,8 +135,12 @@ public class PokemonListPanel extends JPanel {
     }
 
     private void configureList() {
-        pokemonList.setCellRenderer(new PokemonListCellRenderer());
-        pokemonList.setFixedCellHeight(50);
+        // Use custom cell renderer with checkboxes
+        pokemonList.setCellRenderer(new PokemonCheckBoxListRenderer());
+        pokemonList.setFixedCellHeight(40); // Smaller height
+        
+        // Enable multiple selection
+        pokemonList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         
         JScrollPane scrollPane = new JScrollPane(pokemonList);
         scrollPane.setBorder(BorderFactory.createLineBorder(new Color(200, 200, 200)));
@@ -144,12 +159,16 @@ public class PokemonListPanel extends JPanel {
     private JPanel createBottomPanel() {
         JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 0));
         panel.setOpaque(false);
-
-        loadMoreButton = createStyledButton("Load More", "📥");
-        exportButton = createStyledButton("Export", "💾");
-
-        panel.add(loadMoreButton);
-        panel.add(exportButton);
+        
+        saveButton = createStyledButton("Save Team", "💾");
+        JButton loadButton = createStyledButton("Load Team", "📂");
+        
+        panel.add(saveButton);
+        panel.add(loadButton);
+        
+        // Add load button listener
+        loadButton.addActionListener(e -> loadTeam());
+        
         return panel;
     }
 
@@ -172,8 +191,20 @@ public class PokemonListPanel extends JPanel {
     private void setupListeners() {
         typeFilter.addActionListener(e -> filterAndSortList());
         sortOptions.addActionListener(e -> filterAndSortList());
-        loadMoreButton.addActionListener(e -> loadMorePokemon());
-        exportButton.addActionListener(e -> exportCurrentList());
+        saveButton.addActionListener(e -> saveSelectedPokemon());
+        
+        // Handle checkbox clicks
+        pokemonList.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                int index = pokemonList.locationToIndex(e.getPoint());
+                if (index >= 0) {
+                    CheckBoxListItem item = listModel.getElementAt(index);
+                    item.setSelected(!item.isSelected());
+                    pokemonList.repaint();
+                }
+            }
+        });
     }
 
     private void filterAndSortList() {
@@ -211,12 +242,12 @@ public class PokemonListPanel extends JPanel {
             listModel.clear();
             
             if (searchText.isEmpty()) {
-                fullPokemonList.forEach(listModel::addElement);
+                fullPokemonList.forEach(pokemon -> listModel.addElement(new CheckBoxListItem(pokemon)));
             } else {
                 fullPokemonList.stream()
                     .filter(pokemon -> pokemon.getName().toLowerCase().contains(searchText) ||
                                      String.valueOf(pokemon.getId()).contains(searchText))
-                    .forEach(listModel::addElement);
+                    .forEach(pokemon -> listModel.addElement(new CheckBoxListItem(pokemon)));
             }
             
             // Select first item if list is not empty
@@ -232,13 +263,9 @@ public class PokemonListPanel extends JPanel {
      * @param pokemonList the list of Pokemon to display
      */
     public void updatePokemonList(List<Pokemon> pokemonList) {
-        this.fullPokemonList = new ArrayList<>(pokemonList); // Store full list
-        listModel.clear();
-        pokemonList.forEach(listModel::addElement);
-        
-        if (!listModel.isEmpty()) {
-            this.pokemonList.setSelectedIndex(0);
-        }
+        fullPokemonList = new ArrayList<>(pokemonList);
+        updateListContent(pokemonList);
+        viewingLabel.setText("Currently Viewing: All Pokémon");
     }
 
     /**
@@ -247,7 +274,7 @@ public class PokemonListPanel extends JPanel {
      * @return the selected Pokemon, or null if none is selected
      */
     public Pokemon getSelectedPokemon() {
-        return pokemonList.getSelectedValue();
+        return pokemonList.getSelectedValue().getPokemon();
     }
 
     /**
@@ -260,9 +287,9 @@ public class PokemonListPanel extends JPanel {
         // Update the list selection listener
         pokemonList.addListSelectionListener(e -> {
             if (!e.getValueIsAdjusting()) {
-                Pokemon selectedPokemon = pokemonList.getSelectedValue();
-                if (selectedPokemon != null && selectionListener != null) {
-                    selectionListener.accept(selectedPokemon);
+                CheckBoxListItem selectedItem = pokemonList.getSelectedValue();
+                if (selectedItem != null && selectionListener != null) {
+                    selectionListener.accept(selectedItem.getPokemon());
                 }
             }
         });
@@ -292,19 +319,65 @@ public class PokemonListPanel extends JPanel {
         return searchPanel;
     }
 
-    private void loadMorePokemon() {
-        currentPage++;
-        controller.fetchInitialPokemon((currentPage + 1) * PAGE_SIZE);
-    }
-
-    private void exportCurrentList() {
-        // For now, just print the list
-        System.out.println("Exporting Pokemon list...");
-        fullPokemonList.forEach(System.out::println);
+    private void saveSelectedPokemon() {
+        List<Pokemon> selectedPokemon = new ArrayList<>();
+        for (int i = 0; i < listModel.size(); i++) {
+            CheckBoxListItem item = listModel.getElementAt(i);
+            if (item.isSelected()) {
+                selectedPokemon.add(item.getPokemon());
+            }
+        }
+        
+        if (selectedPokemon.isEmpty()) {
+            JOptionPane.showMessageDialog(this, 
+                "Please select at least one Pokémon to save.",
+                "No Selection", 
+                JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
+        // Find next available file name
+        String fileName;
+        do {
+            fileName = String.format("team%d.json", nextTeamNumber++);
+        } while (new File(fileName).exists());
+        
+        controller.saveCollection(fileName);
+        JOptionPane.showMessageDialog(this,
+            "Team saved successfully to " + fileName,
+            "Save Successful",
+            JOptionPane.INFORMATION_MESSAGE);
     }
 
     private void updateListContent(List<Pokemon> filtered) {
         listModel.clear();
-        filtered.forEach(listModel::addElement);
+        filtered.forEach(pokemon -> listModel.addElement(new CheckBoxListItem(pokemon)));
+    }
+
+    // Add new method for loading teams
+    private void loadTeam() {
+        JFileChooser fileChooser = new JFileChooser("src/main/resources/saved_teams");
+        fileChooser.setFileFilter(new javax.swing.filechooser.FileFilter() {
+            public boolean accept(File f) {
+                return f.isDirectory() || f.getName().toLowerCase().endsWith(".json");
+            }
+            public String getDescription() {
+                return "Team Files (*.json)";
+            }
+        });
+
+        int result = fileChooser.showOpenDialog(this);
+        if (result == JFileChooser.APPROVE_OPTION) {
+            File selectedFile = fileChooser.getSelectedFile();
+            List<Pokemon> loadedTeam = controller.loadCollection(selectedFile.getName());
+            if (!loadedTeam.isEmpty()) {
+                updateListContent(loadedTeam);
+                viewingLabel.setText("Currently Viewing: " + selectedFile.getName());
+                JOptionPane.showMessageDialog(this,
+                    "Team loaded successfully from " + selectedFile.getName(),
+                    "Load Successful",
+                    JOptionPane.INFORMATION_MESSAGE);
+            }
+        }
     }
 } 

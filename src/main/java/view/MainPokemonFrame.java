@@ -34,9 +34,9 @@ public class MainPokemonFrame extends JFrame implements IPokemonView {
      */
     private void initComponents() {
         // Set frame properties
-        setTitle("Pokemon Collection Manager");
+        setTitle("Pokéllection");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(1000, 600);
+        setSize(1000, 700);
         setLocationRelativeTo(null);
 
         // Set up the main layout
