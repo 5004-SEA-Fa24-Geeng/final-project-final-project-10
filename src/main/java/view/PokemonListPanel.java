@@ -6,7 +6,6 @@ import controller.IPokemonController;
 
 import javax.swing.*;
 import java.awt.*;
-import javax.swing.border.TitledBorder;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.ArrayList;
@@ -14,7 +13,6 @@ import java.util.Comparator;
 import java.util.stream.Collectors;
 import java.io.File;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.awt.event.MouseAdapter;
 
 /**
@@ -31,8 +29,6 @@ public class PokemonListPanel extends JPanel {
     private JComboBox<PokemonType> typeFilter;
     private JComboBox<SortOption> sortOptions;
     private JButton saveButton;
-    private int currentPage = 0;
-    private static final int PAGE_SIZE = 20;
     private int nextTeamNumber = 1;  // For auto-incrementing file names
     private JLabel viewingLabel;
 
@@ -161,13 +157,7 @@ public class PokemonListPanel extends JPanel {
         panel.setOpaque(false);
         
         saveButton = createStyledButton("Save Team", "💾");
-        JButton loadButton = createStyledButton("Load Team", "📂");
-        
         panel.add(saveButton);
-        panel.add(loadButton);
-        
-        // Add load button listener
-        loadButton.addActionListener(e -> loadTeam());
         
         return panel;
     }
@@ -189,6 +179,11 @@ public class PokemonListPanel extends JPanel {
      * Sets up event listeners for the panel.
      */
     private void setupListeners() {
+        searchField.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+            public void insertUpdate(javax.swing.event.DocumentEvent e) { filterList(); }
+            public void removeUpdate(javax.swing.event.DocumentEvent e) { filterList(); }
+            public void changedUpdate(javax.swing.event.DocumentEvent e) { filterList(); }
+        });
         typeFilter.addActionListener(e -> filterAndSortList());
         sortOptions.addActionListener(e -> filterAndSortList());
         saveButton.addActionListener(e -> saveSelectedPokemon());
@@ -352,32 +347,5 @@ public class PokemonListPanel extends JPanel {
     private void updateListContent(List<Pokemon> filtered) {
         listModel.clear();
         filtered.forEach(pokemon -> listModel.addElement(new CheckBoxListItem(pokemon)));
-    }
-
-    // Add new method for loading teams
-    private void loadTeam() {
-        JFileChooser fileChooser = new JFileChooser("src/main/resources/saved_teams");
-        fileChooser.setFileFilter(new javax.swing.filechooser.FileFilter() {
-            public boolean accept(File f) {
-                return f.isDirectory() || f.getName().toLowerCase().endsWith(".json");
-            }
-            public String getDescription() {
-                return "Team Files (*.json)";
-            }
-        });
-
-        int result = fileChooser.showOpenDialog(this);
-        if (result == JFileChooser.APPROVE_OPTION) {
-            File selectedFile = fileChooser.getSelectedFile();
-            List<Pokemon> loadedTeam = controller.loadCollection(selectedFile.getName());
-            if (!loadedTeam.isEmpty()) {
-                updateListContent(loadedTeam);
-                viewingLabel.setText("Currently Viewing: " + selectedFile.getName());
-                JOptionPane.showMessageDialog(this,
-                    "Team loaded successfully from " + selectedFile.getName(),
-                    "Load Successful",
-                    JOptionPane.INFORMATION_MESSAGE);
-            }
-        }
     }
 } 
