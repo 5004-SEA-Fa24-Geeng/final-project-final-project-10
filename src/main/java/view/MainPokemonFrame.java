@@ -1,6 +1,6 @@
 package view;
 
-import Model.Pokemon;
+import model.Pokemon;
 import controller.IPokemonController;
 
 import javax.swing.*;

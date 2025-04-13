@@ -1,8 +1,8 @@
 package controller;
 
-import Model.IPokemonModel;
-import Model.Pokemon;
-import Model.PokemonType;
+import model.IPokemonModel;
+import model.Pokemon;
+import model.PokemonType;
 
 import java.io.IOException;
 import java.util.ArrayList;

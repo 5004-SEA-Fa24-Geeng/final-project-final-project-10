@@ -1,7 +1,7 @@
 import controller.IPokemonController;
 import controller.PokemonController;
-import Model.IPokemonModel;
-import Model.PokemonModel;
+import model.IPokemonModel;
+import model.PokemonModel;
 import view.IPokemonView;
 import view.MainPokemonFrame;
 

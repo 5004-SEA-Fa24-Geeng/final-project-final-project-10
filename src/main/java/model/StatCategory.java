@@ -1,4 +1,4 @@
-package Model;
+package model;
 
 public enum StatCategory {
     HP, ATTACK, DEFENSE, SPECIAL_ATTACK, SPECIAL_DEFENSE, SPEED;

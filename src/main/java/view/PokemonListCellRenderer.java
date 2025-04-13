@@ -6,8 +6,8 @@ import javax.swing.JList;
 import java.awt.Color;
 import java.awt.Font;
 import javax.swing.BorderFactory;
-import Model.Pokemon;
-import Model.PokemonType;
+import model.Pokemon;
+import model.PokemonType;
 
 public class PokemonListCellRenderer extends DefaultListCellRenderer {
     @Override

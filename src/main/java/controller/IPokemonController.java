@@ -1,7 +1,7 @@
 package controller;
 
-import Model.Pokemon;
-import Model.PokemonType;
+import model.Pokemon;
+import model.PokemonType;
 
 import java.util.List;
 

@@ -1,7 +1,7 @@
 package view;
 
-import Model.Pokemon;
-import Model.PokemonType;
+import model.Pokemon;
+import model.PokemonType;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;

@@ -1,6 +1,6 @@
 package view;
 
-import Model.PokemonType;
+import model.PokemonType;
 import javax.swing.*;
 import java.awt.*;
 

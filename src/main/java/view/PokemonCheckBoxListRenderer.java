@@ -2,8 +2,8 @@ package view;
 
 import javax.swing.*;
 import java.awt.*;
-import Model.Pokemon;
-import Model.PokemonType;
+import model.Pokemon;
+import model.PokemonType;
 
 public class PokemonCheckBoxListRenderer extends JCheckBox implements ListCellRenderer<CheckBoxListItem> {
     

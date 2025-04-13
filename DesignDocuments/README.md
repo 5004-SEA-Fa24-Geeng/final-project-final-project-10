@@ -39,7 +39,7 @@ classDiagram
         CSV
     }
 
-%% Model Classes
+%% model Classes
     class Pokemon {
         -int id
         -String name
@@ -225,7 +225,7 @@ classDiagram
         FAIRY
     }
 
-%% Model Classes
+%% model Classes
     class Pokemon {
         -int id
         -String name
