@@ -33,14 +33,6 @@ public interface IPokemonController {
     void saveCollection(String filename);
 
     /**
-     * Loads a Pokemon collection from a file.
-     *
-     * @param filename the name of the file to load from
-     * @return the loaded Pokemon collection
-     */
-    List<Pokemon> loadCollection(String filename);
-
-    /**
      * Searches Pokemon by name.
      *
      * @param searchTerm the name to search for

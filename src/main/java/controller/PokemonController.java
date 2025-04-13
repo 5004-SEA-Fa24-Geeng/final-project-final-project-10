@@ -77,17 +77,7 @@ public class PokemonController implements IPokemonController {
      * @param filename the name of the file to load from
      * @return the loaded Pokemon collection
      */
-    @Override
-    public List<Pokemon> loadCollection(String filename) {
-        try {
-            currentPokemonList = model.loadCollection(filename);
-            return new ArrayList<>(currentPokemonList);
-        } catch (IOException e) {
-            System.err.println("Error loading Pokemon collection: " + e.getMessage());
-            e.printStackTrace();
-            return new ArrayList<>(); // Return empty list if load fails
-        }
-    }
+
 
     /**
      * Searches Pokemon by name.
