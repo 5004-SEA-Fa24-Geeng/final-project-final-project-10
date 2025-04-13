@@ -53,4 +53,14 @@ public class PokemonCheckBoxListRenderer extends JCheckBox implements ListCellRe
             default -> new Color(200, 200, 200);
         };
     }
+
+    // Add this static method to help with checkbox hit detection
+    public static Rectangle getCheckBoxBounds(Rectangle cellBounds) {
+        return new Rectangle(
+            cellBounds.x + 4,
+            cellBounds.y + (cellBounds.height - 16) / 2,
+            16,
+            16
+        );
+    }
 } 

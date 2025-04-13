@@ -195,8 +195,26 @@ public class PokemonListPanel extends JPanel {
                 int index = pokemonList.locationToIndex(e.getPoint());
                 if (index >= 0) {
                     CheckBoxListItem item = listModel.getElementAt(index);
-                    item.setSelected(!item.isSelected());
-                    pokemonList.repaint();
+                    Rectangle cellBounds = pokemonList.getCellBounds(index, index);
+                    
+                    // Calculate checkbox bounds (assuming 20px width from left edge)
+                    Rectangle checkBoxBounds = new Rectangle(
+                        cellBounds.x + 4,  // Left padding
+                        cellBounds.y + (cellBounds.height - 16) / 2,  // Vertically centered
+                        16,  // Checkbox width
+                        16   // Checkbox height
+                    );
+                    
+                    // If click is within checkbox bounds, toggle selection
+                    if (checkBoxBounds.contains(e.getPoint())) {
+                        item.setSelected(!item.isSelected());
+                        pokemonList.repaint();
+                    } else {
+                        // If clicked outside checkbox, just trigger detail view
+                        if (selectionListener != null) {
+                            selectionListener.accept(item.getPokemon());
+                        }
+                    }
                 }
             }
         });
