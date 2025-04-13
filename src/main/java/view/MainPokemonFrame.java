@@ -14,8 +14,6 @@ import java.util.List;
 public class MainPokemonFrame extends JFrame implements IPokemonView {
 
     private IPokemonController controller;
-
-    // Uncomment these lines when implementing actual panels
     private PokemonListPanel listPanel;
     private PokemonDetailPanel detailPanel;
 
@@ -55,7 +53,7 @@ public class MainPokemonFrame extends JFrame implements IPokemonView {
                 JLabel logoLabel = new JLabel(new ImageIcon(scaledImage));
                 logoLabel.setHorizontalAlignment(SwingConstants.CENTER);
                 logoLabel.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
-                
+
                 JPanel logoPanel = new JPanel(new BorderLayout());
                 logoPanel.setBackground(new Color(245, 245, 255));
                 logoPanel.add(logoLabel, BorderLayout.CENTER);
@@ -74,7 +72,7 @@ public class MainPokemonFrame extends JFrame implements IPokemonView {
         // Initialize panels
         listPanel = new PokemonListPanel(controller);
         detailPanel = new PokemonDetailPanel(controller);
-        
+
         // Add panels to split pane
         splitPane.setLeftComponent(listPanel);
         splitPane.setRightComponent(detailPanel);
@@ -94,7 +92,7 @@ public class MainPokemonFrame extends JFrame implements IPokemonView {
         titleLabel.setFont(new Font("Arial", Font.BOLD, 32));
         titleLabel.setForeground(new Color(30, 55, 153));  // Pokemon blue color
         titleLabel.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 0));
-        
+
         JPanel titlePanel = new JPanel(new BorderLayout());
         titlePanel.setBackground(new Color(245, 245, 255));
         titlePanel.add(titleLabel, BorderLayout.CENTER);
@@ -131,8 +129,8 @@ public class MainPokemonFrame extends JFrame implements IPokemonView {
     public void showPokemonDetails(Pokemon pokemon) {
         System.out.println("Showing details for Pokemon: " + pokemon.getName());
 
-         if (detailPanel != null) {
-             detailPanel.displayPokemonDetails(pokemon);
-         }
+        if (detailPanel != null) {
+            detailPanel.displayPokemonDetails(pokemon);
+        }
     }
 }

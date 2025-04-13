@@ -189,11 +189,11 @@ public class PokemonDetailPanel extends JPanel {
     /**
      * Adds a stat bar to the chart.
      *
-     * @param panel the panel to add the bar to
-     * @param statName the name of the stat
+     * @param panel     the panel to add the bar to
+     * @param statName  the name of the stat
      * @param statValue the value of the stat
-     * @param maxValue the maximum value for scaling
-     * @param barColor the color of the bar
+     * @param maxValue  the maximum value for scaling
+     * @param barColor  the color of the bar
      */
     private void addStatBar(JPanel panel, String statName, int statValue, int maxValue, Color barColor) {
         JPanel statPanel = new JPanel(new BorderLayout(10, 0));
