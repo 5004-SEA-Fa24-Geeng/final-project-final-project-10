@@ -47,7 +47,7 @@ When you first launch Pokéllection, the application will:
 - **Left panel**: List of Pokémon with search and filter options
 - **Right panel**: Detailed view of the selected Pokémon
 
-![The main application interface showing both panels.png](The%20main%20application%20interface%20showing%20both%20panels.png)
+![The main application interface showing both panels.png](Screenshots/The%20main%20application%20interface%20showing%20both%20panels.png)
 > _The main application interface shows both panels._
 
 ---
@@ -70,7 +70,7 @@ The right panel displays detailed information about the selected Pokémon:
 
 To view a Pokémon's details, simply click on its name in the list on the left panel.
 
-![Details panel for Pikachu.png](Details%20panel%20for%20Pikachu.png)
+![Details panel for Pikachu.png](Screenshots/Details%20panel%20for%20Pikachu.png)
 > _Details panel for Pikachu_
 
 ---
@@ -83,7 +83,7 @@ To view a Pokémon's details, simply click on its name in the list on the left p
 3. The list will automatically update to show only Pokémon matching your search term
 4. Clear the search box to show all Pokémon again
 
-![Search result for "char" showing Charmander, Charmeleon, Charizard.png](Search%20result%20for%20%22char%22%20showing%20Charmander%2C%20Charmeleon%2C%20Charizard.png)
+![Search result for "char" showing Charmander, Charmeleon, Charizard.png](Screenshots/Search%20result%20for%20%22char%22%20showing%20Charmander%2C%20Charmeleon%2C%20Charizard.png)
 > _Search result for "char" showing Charmander, Charmeleon, Charizard._
 
 ### Filtering by Type
@@ -92,7 +92,7 @@ To view a Pokémon's details, simply click on its name in the list on the left p
 3. The list will update to show only Pokémon of the selected type
 4. Select **"All Types"** to remove the filter
 
-![Showing only grass-type Pokemon.png](Showing%20only%20grass-type%20Pokemon.png)
+![Showing only grass-type Pokemon.png](Screenshots/Showing%20only%20grass-type%20Pokemon.png)
 > _Showing only grass-type Pokémon._
 
 ---
@@ -111,7 +111,7 @@ You can sort the Pokémon list in different ways:
 
 The list will immediately update to reflect your sorting preference.
 
-![Sort dropdown menu expanded.png](Sort%20dropdown%20menu%20expanded.png)
+![Sort dropdown menu expanded.png](Screenshots/Sort%20dropdown%20menu%20expanded.png)
 > _Sort dropdown menu expanded._
 
 ---
@@ -128,10 +128,10 @@ You can create custom collections of your favorite Pokémon:
 4. The application will automatically save your collection as a **JSON** file with an auto-incremented name (`team1.json`, `team2.json`, etc.)
 5. A confirmation message will appear showing the filename of your saved collection
 
-![Several Pokemon with checkboxes selected.png](Several%20Pokemon%20with%20checkboxes%20selected.png)
+![Several Pokemon with checkboxes selected.png](Screenshots/Several%20Pokemon%20with%20checkboxes%20selected.png)
 > _Several Pokémon with checkboxes selected_  
 
-![The save confirmation dialog.png](The%20save%20confirmation%20dialog.png)
+![The save confirmation dialog.png](Screenshots/The%20save%20confirmation%20dialog.png)
 > _The save confirmation dialog._
 
 ---
