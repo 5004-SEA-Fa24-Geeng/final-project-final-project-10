@@ -1,12 +1,24 @@
 [![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/IE0ITl4j)
-# Final Project for CS 5004 - (APPLICATION NAME/Update)
+# Final Project for CS 5004 - (App Name: Pokellection)
 
-(remove this and add your sections/elements)
-This readme should contain the following information: 
+# Pokéllection
 
-* The group member's names and link to their personal githubs
-* The application name and a brief description of the application
-* Links to design documents and manuals
-* Instructions on how to run the application
+## Team Members
+- [Xiaomeng Li](<https://github.com/lanselylee>)
+- [Xinyi Zhang](<https://github.com/xinyi-70>)
+- [Xinyi Hu](<https://github.com/123321-xy>)
+- [Jiani Ren](<https://github.com/jennnyren>)
 
-Ask yourself, if you started here in the readme, would you have what you need to work on this project and/or use the application?
+  (Click on names to jump to personal Github pages.)
+
+## About the App
+**Pokéllection** is a dynamic web application that lets users browse, search, and collect their favorite Pokémon. The app integrates with the [PokeAPI](https://pokeapi.co/) to fetch detailed information for the first 100 Pokémon, including their images, types, and stats.
+Users can:
+- Explore a catalog of the first 100 Pokémon
+- View detailed statistics and type information
+- Create and manage custom collections of favorite Pokémon
+- Save collections for future reference
+
+### Resources
+- [Design_Documents.md](DesignDocuments/Design_Documents.md)
+- [Pokellection User's Manual.md](Manual/Pokellection%20User%27s%20Manual.md)
