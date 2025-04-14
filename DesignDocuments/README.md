@@ -157,6 +157,7 @@ classDiagram
 ```mermaid
 classDiagram
 %% Relationships
+    IPokemon <|.. Pokemon : implements
     IPokemonModel <|.. PokemonModel : implements
     IPokemonController <|.. PokemonController : implements
     IPokemonView <|.. MainPokemonFrame : implements
@@ -165,17 +166,35 @@ classDiagram
     Pokemon -- PokemonType : uses
     PokemonModel --> Pokemon : manages
 
-    PokemonController --> IPokemonModel : uses
-
-    entry.PokemonApp --> IPokemonModel : creates
-    entry.PokemonApp --> IPokemonController : creates
-    entry.PokemonApp --> IPokemonView : creates
+    PokemonApp --> IPokemonModel : creates
+    PokemonApp --> IPokemonController : creates
+    PokemonApp --> IPokemonView : creates
 
     MainPokemonFrame --> IPokemonController : uses
     MainPokemonFrame *-- PokemonListPanel : contains
     MainPokemonFrame *-- PokemonDetailPanel : contains
 
+    PokemonDetailPanel --> IPokemonController : uses
+    
+    PokemonListPanel --> IPokemonController : uses
+    PokemonListPanel --> CheckBoxListItem : uses
+    PokemonListPanel --> TypeComboBoxRenderer : uses
+    PokemonListPanel --> RoundedBorder : uses
+    PokemonListPanel --> PokemonCheckBoxListRenderer : uses
+
+    CheckBoxListItem *-- Pokemon : contains
+    PokemonCheckBoxListRenderer ..> CheckBoxListItem : renders
+
 %% Interface Classes
+    class IPokemon {
+        <<interface>>
+        +getId() int
+        +getName() String
+        +getImageUrl() String
+        +getTypes() List~PokemonType~
+        +getStats() PokemonStats
+    }
+    
     class IPokemonModel {
         <<interface>>
         +fetchPokemonById(int) Pokemon
@@ -237,6 +256,11 @@ classDiagram
         +getImageUrl() String
         +getTypes() List~PokemonType~
         +getStats() PokemonStats
+        +setId(int) void
+        +setName(String) void
+        +setImageUrl(String) void
+        +setTypes(List~PokemonType~) void
+        +setStats(PokemonStats) void
         +toString() String
     }
 
@@ -257,7 +281,7 @@ classDiagram
 
     class PokemonModel {
         -HttpClient httpClient
-        -Gson gson
+        -ObjectMapper objectMapper
         -List~Pokemon~ pokemonCache
         +fetchPokemonById(int) Pokemon
         +fetchMultiplePokemon(int) List~Pokemon~
@@ -266,6 +290,8 @@ classDiagram
         -parseApiResponse(String) Pokemon
         -writeJsonToFile(List~Pokemon~, String) void
         -readJsonFromFile(String) List~Pokemon~
+        -formatFilename(String) String
+        -updateCacheFromCollection(List~Pokemon~) void
     }
     
 %% Controller Classes
@@ -284,7 +310,7 @@ classDiagram
     }
 
 %% Entry Point
-    class entry.PokemonApp {
+    class PokemonApp {
         +main(String[]) void
         -initializeApplication() void
     }
@@ -299,23 +325,7 @@ classDiagram
         +updatePokemonList(List~Pokemon~) void
         +showPokemonDetails(Pokemon) void
         -initComponents() void
-        -setupListeners() void
-    }
-
-    class PokemonListPanel {
-        -IPokemonController controller
-        -JTable pokemonTable
-        -JTextField searchField
-        -JComboBox typeFilterComboBox
-        -JButton saveButton
-        -JButton loadButton
-        +PokemonListPanel(IPokemonController)
-        -initComponents() void
-        -updateTable(List~Pokemon~) void
-        -saveCollection() void
-        -loadCollection() void
-        -searchPokemon() void
-        -filterByType() void
+        -createStyledTitle() void
     }
 
     class PokemonDetailPanel {
@@ -324,10 +334,78 @@ classDiagram
         -JLabel imageLabel
         -JPanel statsPanel
         -JPanel infoPanel
+        -Map~String, ImageIcon~ imageCache
+        -Map~PokemonType, Color~ typeColors
         +PokemonDetailPanel(IPokemonController)
+        -initTypeColors() void
         -initComponents() void
         +displayPokemonDetails(Pokemon) void
         -createStatsChart(PokemonStats) JPanel
+        -addStatBar(JPanel, String, int, int, Color) void
+        -updateInfoPanel(Pokemon) void
+        -createTypeLabel(PokemonType) JLabel
+        -loadPokemonImage(String) void
+        -clearDisplay() void
+        -capitalizeFirst(String) String
     }
+    
+    class PokemonListPanel {
+        -IPokemonController controller
+        -DefaultListModel~CheckBoxListItem~ listModel
+        -JList~CheckBoxListItem~ pokemonList
+        -Consumer~Pokemon~ selectionListener
+        -List~Pokemon~ fullPokemonList
+        -JTextField searchField
+        -JComboBox~PokemonType~ typeFilter
+        -JComboBox~SortOption~ sortOptions
+        -JButton saveButton
+        -int nextTeamNumber
+        -JLabel viewingLabel
+        -enum SortOption
+        +PokemonListPanel(IPokemonController)
+        -initializeComponents() void
+        -createControlPanel() JPanel
+        -configureList() void
+        -createBottomPanel() JPanel
+        -createStyledButton(String, String) JButton
+        -setupListeners() void
+        -filterAndSortList() void
+        -setupSearch() void
+        -filterList() void
+        +updatePokemonList(List~Pokemon~) void
+        +setPokemonSelectionListener(Consumer~Pokemon~) void
+        -createSearchPanel() JPanel
+        -saveSelectedPokemon() void
+        -updateListContent(List~Pokemon~) void
+    }
+
+    class CheckBoxListItem {
+        -Pokemon pokemon
+        -boolean selected
+        +CheckBoxListItem(Pokemon)
+        +getPokemon() Pokemon
+        +isSelected() boolean
+        +setSelected(boolean) void
+    }
+
+    class PokemonCheckBoxListRenderer {
+        +PokemonCheckBoxListRenderer()
+        +getListCellRendererComponent(JList, CheckBoxListItem, int, boolean, boolean) Component
+        -getTypeColor(PokemonType) Color
+    }
+
+    class RoundedBorder {
+        -int radius
+        -Color color
+        +RoundedBorder(int, Color)
+        +paintBorder(Component, Graphics, int, int, int, int) void
+        +getBorderInsets(Component) Insets
+        +isBorderOpaque() boolean
+    }
+
+    class TypeComboBoxRenderer {
+        +getListCellRendererComponent(JList, Object, int, boolean, boolean) Component
+    }
+
 ```
 
