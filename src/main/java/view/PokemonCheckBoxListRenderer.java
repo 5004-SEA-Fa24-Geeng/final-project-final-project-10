@@ -2,16 +2,17 @@ package view;
 
 import javax.swing.*;
 import java.awt.*;
+
 import Model.Pokemon;
 import Model.PokemonType;
 
 public class PokemonCheckBoxListRenderer extends JCheckBox implements ListCellRenderer<CheckBoxListItem> {
-    
+
     public PokemonCheckBoxListRenderer() {
         setOpaque(true);
         setFont(new Font("Arial", Font.PLAIN, 14)); // Smaller, consistent font
     }
-    
+
     @Override
     public Component getListCellRendererComponent(
             JList<? extends CheckBoxListItem> list,
@@ -19,31 +20,31 @@ public class PokemonCheckBoxListRenderer extends JCheckBox implements ListCellRe
             int index,
             boolean isSelected,
             boolean cellHasFocus) {
-            
+
         Pokemon pokemon = value.getPokemon();
         setText(pokemon.toString());
         setSelected(value.isSelected());
-        
+
         if (isSelected) {
             setBackground(list.getSelectionBackground());
             setForeground(list.getSelectionForeground());
         } else {
             setBackground(list.getBackground());
             setForeground(list.getForeground());
-            
+
             // Apply type-based color tint
             Color typeColor = getTypeColor(pokemon.getTypes().get(0));
             setBackground(new Color(
-                typeColor.getRed(),
-                typeColor.getGreen(),
-                typeColor.getBlue(),
-                30
+                    typeColor.getRed(),
+                    typeColor.getGreen(),
+                    typeColor.getBlue(),
+                    30
             ));
         }
-        
+
         return this;
     }
-    
+
     private Color getTypeColor(PokemonType type) {
         return switch (type) {
             case FIRE -> new Color(255, 100, 100);
@@ -53,14 +54,4 @@ public class PokemonCheckBoxListRenderer extends JCheckBox implements ListCellRe
             default -> new Color(200, 200, 200);
         };
     }
-
-    // Add this static method to help with checkbox hit detection
-    public static Rectangle getCheckBoxBounds(Rectangle cellBounds) {
-        return new Rectangle(
-            cellBounds.x + 4,
-            cellBounds.y + (cellBounds.height - 16) / 2,
-            16,
-            16
-        );
-    }
-} 
+}
