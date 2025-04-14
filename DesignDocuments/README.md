@@ -173,8 +173,6 @@ classDiagram
     MainPokemonFrame --> IPokemonController : uses
     MainPokemonFrame *-- PokemonListPanel : contains
     MainPokemonFrame *-- PokemonDetailPanel : contains
-
-    PokemonDetailPanel --> IPokemonController : uses
     
     PokemonListPanel --> IPokemonController : uses
     PokemonListPanel --> CheckBoxListItem : uses
@@ -329,14 +327,13 @@ classDiagram
     }
 
     class PokemonDetailPanel {
-        -IPokemonController controller
         -JLabel nameLabel
         -JLabel imageLabel
         -JPanel statsPanel
         -JPanel infoPanel
         -Map~String, ImageIcon~ imageCache
         -Map~PokemonType, Color~ typeColors
-        +PokemonDetailPanel(IPokemonController)
+        +PokemonDetailPanel() 
         -initTypeColors() void
         -initComponents() void
         +displayPokemonDetails(Pokemon) void
