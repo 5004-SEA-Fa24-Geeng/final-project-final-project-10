@@ -9,6 +9,7 @@ import org.junit.jupiter.api.io.TempDir;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -16,22 +17,26 @@ import java.util.List;
 
 /**
  * Test class for PokemonModel.
- * This test suite uses a subclass of PokemonModel to override the HTTP-dependent methods
- * to avoid requiring network connections during tests.
+ * This test suite uses reflection to access private methods for testing.
  */
 public class PokemonModelTest {
 
     private PokemonModel pokemonModel;
     private ObjectMapper objectMapper;
+    private Method parseApiResponseMethod;
 
     @TempDir
     Path tempDir;
 
     @BeforeEach
-    void setUp() {
-        // Create a test instance that overrides network-dependent methods
+    void setUp() throws Exception {
+        // Create test instance and set up reflection to access private method
         pokemonModel = new TestPokemonModel();
         objectMapper = new ObjectMapper();
+
+        // Get access to the private parseApiResponse method using reflection
+        parseApiResponseMethod = PokemonModel.class.getDeclaredMethod("parseApiResponse", String.class);
+        parseApiResponseMethod.setAccessible(true);
     }
 
     /**
@@ -49,6 +54,13 @@ public class PokemonModelTest {
                 throw new IOException("Pokemon not found with id: " + id);
             }
         }
+    }
+
+    /**
+     * Helper method to invoke the private parseApiResponse method using reflection.
+     */
+    private Pokemon invokeParseApiResponse(String jsonResponse) throws Exception {
+        return (Pokemon) parseApiResponseMethod.invoke(pokemonModel, jsonResponse);
     }
 
     /**
@@ -118,6 +130,227 @@ public class PokemonModelTest {
         Pokemon ivysaur = pokemon.get(1);
         assertEquals(2, ivysaur.getId());
         assertEquals("ivysaur", ivysaur.getName());
+    }
+
+    @Test
+    void testParseApiResponseBasic() throws Exception {
+        // Test parsing a basic API response
+        String jsonResponse = "{\n" +
+                "  \"id\": 25,\n" +
+                "  \"name\": \"pikachu\",\n" +
+                "  \"sprites\": {\n" +
+                "    \"front_default\": \"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png\"\n" +
+                "  },\n" +
+                "  \"types\": [\n" +
+                "    {\n" +
+                "      \"type\": {\n" +
+                "        \"name\": \"electric\"\n" +
+                "      }\n" +
+                "    }\n" +
+                "  ],\n" +
+                "  \"stats\": [\n" +
+                "    {\n" +
+                "      \"base_stat\": 35,\n" +
+                "      \"stat\": {\n" +
+                "        \"name\": \"hp\"\n" +
+                "      }\n" +
+                "    },\n" +
+                "    {\n" +
+                "      \"base_stat\": 55,\n" +
+                "      \"stat\": {\n" +
+                "        \"name\": \"attack\"\n" +
+                "      }\n" +
+                "    },\n" +
+                "    {\n" +
+                "      \"base_stat\": 40,\n" +
+                "      \"stat\": {\n" +
+                "        \"name\": \"defense\"\n" +
+                "      }\n" +
+                "    },\n" +
+                "    {\n" +
+                "      \"base_stat\": 50,\n" +
+                "      \"stat\": {\n" +
+                "        \"name\": \"special-attack\"\n" +
+                "      }\n" +
+                "    },\n" +
+                "    {\n" +
+                "      \"base_stat\": 50,\n" +
+                "      \"stat\": {\n" +
+                "        \"name\": \"special-defense\"\n" +
+                "      }\n" +
+                "    },\n" +
+                "    {\n" +
+                "      \"base_stat\": 90,\n" +
+                "      \"stat\": {\n" +
+                "        \"name\": \"speed\"\n" +
+                "      }\n" +
+                "    }\n" +
+                "  ]\n" +
+                "}";
+
+        Pokemon pikachu = invokeParseApiResponse(jsonResponse);
+
+        // Verify the Pokemon properties
+        assertEquals(25, pikachu.getId());
+        assertEquals("pikachu", pikachu.getName());
+        assertEquals("https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png", pikachu.getImageUrl());
+        assertEquals(1, pikachu.getTypes().size());
+        assertTrue(pikachu.getTypes().contains(PokemonType.ELECTRIC));
+
+        // Verify stats
+        assertEquals(35, pikachu.getStats().getHp());
+        assertEquals(55, pikachu.getStats().getAttack());
+        assertEquals(40, pikachu.getStats().getDefense());
+        assertEquals(50, pikachu.getStats().getSpecialAttack());
+        assertEquals(50, pikachu.getStats().getSpecialDefense());
+        assertEquals(90, pikachu.getStats().getSpeed());
+    }
+
+    @Test
+    void testParseApiResponseMultipleTypes() throws Exception {
+        // Test parsing a Pokemon with multiple types
+        String jsonResponse = "{\n" +
+                "  \"id\": 6,\n" +
+                "  \"name\": \"charizard\",\n" +
+                "  \"sprites\": {\n" +
+                "    \"front_default\": \"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/6.png\"\n" +
+                "  },\n" +
+                "  \"types\": [\n" +
+                "    {\n" +
+                "      \"type\": {\n" +
+                "        \"name\": \"fire\"\n" +
+                "      }\n" +
+                "    },\n" +
+                "    {\n" +
+                "      \"type\": {\n" +
+                "        \"name\": \"flying\"\n" +
+                "      }\n" +
+                "    }\n" +
+                "  ],\n" +
+                "  \"stats\": [\n" +
+                "    {\n" +
+                "      \"base_stat\": 78,\n" +
+                "      \"stat\": {\n" +
+                "        \"name\": \"hp\"\n" +
+                "      }\n" +
+                "    },\n" +
+                "    {\n" +
+                "      \"base_stat\": 84,\n" +
+                "      \"stat\": {\n" +
+                "        \"name\": \"attack\"\n" +
+                "      }\n" +
+                "    },\n" +
+                "    {\n" +
+                "      \"base_stat\": 78,\n" +
+                "      \"stat\": {\n" +
+                "        \"name\": \"defense\"\n" +
+                "      }\n" +
+                "    },\n" +
+                "    {\n" +
+                "      \"base_stat\": 109,\n" +
+                "      \"stat\": {\n" +
+                "        \"name\": \"special-attack\"\n" +
+                "      }\n" +
+                "    },\n" +
+                "    {\n" +
+                "      \"base_stat\": 85,\n" +
+                "      \"stat\": {\n" +
+                "        \"name\": \"special-defense\"\n" +
+                "      }\n" +
+                "    },\n" +
+                "    {\n" +
+                "      \"base_stat\": 100,\n" +
+                "      \"stat\": {\n" +
+                "        \"name\": \"speed\"\n" +
+                "      }\n" +
+                "    }\n" +
+                "  ]\n" +
+                "}";
+
+        Pokemon charizard = invokeParseApiResponse(jsonResponse);
+
+        // Verify the Pokemon properties
+        assertEquals(6, charizard.getId());
+        assertEquals("charizard", charizard.getName());
+        assertEquals(2, charizard.getTypes().size());
+        assertTrue(charizard.getTypes().contains(PokemonType.FIRE));
+        assertTrue(charizard.getTypes().contains(PokemonType.FLYING));
+
+        // Verify stats
+        assertEquals(78, charizard.getStats().getHp());
+        assertEquals(84, charizard.getStats().getAttack());
+        assertEquals(78, charizard.getStats().getDefense());
+        assertEquals(109, charizard.getStats().getSpecialAttack());
+        assertEquals(85, charizard.getStats().getSpecialDefense());
+        assertEquals(100, charizard.getStats().getSpeed());
+    }
+
+    @Test
+    void testParseApiResponseMissingStats() throws Exception {
+        // Test parsing a response with missing stats
+        String jsonResponse = "{\n" +
+                "  \"id\": 132,\n" +
+                "  \"name\": \"ditto\",\n" +
+                "  \"sprites\": {\n" +
+                "    \"front_default\": \"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/132.png\"\n" +
+                "  },\n" +
+                "  \"types\": [\n" +
+                "    {\n" +
+                "      \"type\": {\n" +
+                "        \"name\": \"normal\"\n" +
+                "      }\n" +
+                "    }\n" +
+                "  ],\n" +
+                "  \"stats\": [\n" +
+                "    {\n" +
+                "      \"base_stat\": 48,\n" +
+                "      \"stat\": {\n" +
+                "        \"name\": \"hp\"\n" +
+                "      }\n" +
+                "    },\n" +
+                "    {\n" +
+                "      \"base_stat\": 48,\n" +
+                "      \"stat\": {\n" +
+                "        \"name\": \"attack\"\n" +
+                "      }\n" +
+                "    },\n" +
+                "    {\n" +
+                "      \"base_stat\": 48,\n" +
+                "      \"stat\": {\n" +
+                "        \"name\": \"defense\"\n" +
+                "      }\n" +
+                "    }\n" +
+                "  ]\n" +
+                "}";
+
+        Pokemon ditto = invokeParseApiResponse(jsonResponse);
+
+        // Verify the Pokemon properties
+        assertEquals(132, ditto.getId());
+        assertEquals("ditto", ditto.getName());
+        assertEquals(1, ditto.getTypes().size());
+        assertTrue(ditto.getTypes().contains(PokemonType.NORMAL));
+
+        // Verify stats (missing stats should be 0)
+        assertEquals(48, ditto.getStats().getHp());
+        assertEquals(48, ditto.getStats().getAttack());
+        assertEquals(48, ditto.getStats().getDefense());
+        assertEquals(0, ditto.getStats().getSpecialAttack());
+        assertEquals(0, ditto.getStats().getSpecialDefense());
+        assertEquals(0, ditto.getStats().getSpeed());
+    }
+
+    @Test
+    void testParseApiResponseInvalidJson() {
+        // Test parsing invalid JSON (should throw an exception)
+        String invalidJson = "{ this is not valid JSON }";
+
+        Exception exception = assertThrows(Exception.class, () -> {
+            invokeParseApiResponse(invalidJson);
+        });
+
+        // Verify that an exception was thrown
+        assertNotNull(exception);
     }
 
     @Test
