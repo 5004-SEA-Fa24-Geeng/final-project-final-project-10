@@ -22,8 +22,6 @@ import java.util.HashMap;
  */
 public class PokemonDetailPanel extends JPanel {
 
-    private IPokemonController controller;
-
     // UI Components as per UML
     private JLabel nameLabel;
     private JLabel imageLabel;
@@ -38,11 +36,8 @@ public class PokemonDetailPanel extends JPanel {
 
     /**
      * Constructor initializes the panel with a reference to the controller.
-     *
-     * @param controller the Pokemon controller
      */
-    public PokemonDetailPanel(IPokemonController controller) {
-        this.controller = controller;
+    public PokemonDetailPanel() {
         initTypeColors();
         initComponents();
     }

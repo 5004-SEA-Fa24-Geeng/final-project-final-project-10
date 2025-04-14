@@ -71,7 +71,7 @@ public class MainPokemonFrame extends JFrame implements IPokemonView {
 
         // Initialize panels
         listPanel = new PokemonListPanel(controller);
-        detailPanel = new PokemonDetailPanel(controller);
+        detailPanel = new PokemonDetailPanel();
 
         // Add panels to split pane
         splitPane.setLeftComponent(listPanel);
@@ -127,7 +127,11 @@ public class MainPokemonFrame extends JFrame implements IPokemonView {
      */
     @Override
     public void showPokemonDetails(Pokemon pokemon) {
-        System.out.println("Showing details for Pokemon: " + pokemon.getName());
+        if (pokemon == null) {
+            System.out.println("Cannot show details for null Pokemon");
+        } else {
+            System.out.println("Showing details for Pokemon: " + pokemon.getName());
+        }
 
         if (detailPanel != null) {
             detailPanel.displayPokemonDetails(pokemon);
