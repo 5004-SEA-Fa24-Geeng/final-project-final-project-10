@@ -32,7 +32,9 @@ public class PokemonListPanel extends JPanel {
     private int nextTeamNumber = 1;  // For auto-incrementing file names
     private JLabel viewingLabel;
 
-    // Add enum for sort options
+    /**
+     * Enum for sort options.
+     */ 
     private enum SortOption {
         NAME_ASC("Name A-Z"),
         NAME_DESC("Name Z-A"),
@@ -135,7 +137,9 @@ public class PokemonListPanel extends JPanel {
         panel.add(filterSortPanel, BorderLayout.CENTER);
         return panel;
     }
-
+    /** 
+     * Configures the JList with the custom cell renderer and styling.
+     */
     private void configureList() {
         // Use custom cell renderer with checkboxes
         pokemonList.setCellRenderer(new PokemonCheckBoxListRenderer());
@@ -158,16 +162,28 @@ public class PokemonListPanel extends JPanel {
         add(scrollPane, BorderLayout.CENTER);
     }
 
+    /**
+     * Creates the bottom panel with the save button.
+     *
+     * @return The JPanel containing the save button.
+     */ 
     private JPanel createBottomPanel() {
         JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 0));
         panel.setOpaque(false);
 
         saveButton = createStyledButton("Save Team", "💾");
-        panel.add(saveButton);
+        panel.add(saveButton);// Add save button to the panel
 
         return panel;
     }
 
+    /**
+     * Creates a styled button with an icon and text.
+     *
+     * @param text The text to display on the button.
+     * @param icon The icon to display on the button.
+     * @return The JButton created.
+     */  
     private JButton createStyledButton(String text, String icon) {
         JButton button = new JButton(icon + " " + text);
         button.setFont(new Font("Arial", Font.BOLD, 14));
@@ -234,6 +250,9 @@ public class PokemonListPanel extends JPanel {
         });
     }
 
+    /**
+     * Filters and sorts the list of Pokemon based on the selected type and sort option.
+     */
     private void filterAndSortList() {
         if (fullPokemonList == null) return;
 
@@ -253,7 +272,9 @@ public class PokemonListPanel extends JPanel {
 
         updateListContent(filtered);
     }
-
+    /** 
+     * Sets up the search functionality.
+     */
     private void setupSearch() {
         searchField.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
             public void changedUpdate(javax.swing.event.DocumentEvent e) {
@@ -270,6 +291,9 @@ public class PokemonListPanel extends JPanel {
         });
     }
 
+    /**
+     * Filters the list based on the search text.
+     */ 
     private void filterList() {
         String searchText = searchField.getText().toLowerCase().trim();
 
@@ -321,6 +345,11 @@ public class PokemonListPanel extends JPanel {
         });
     }
 
+    /**
+     * Creates the search panel with an icon and text field.
+     *
+     * @return The JPanel containing the search panel.
+     */
     private JPanel createSearchPanel() {
         JPanel searchPanel = new JPanel(new BorderLayout(5, 0));
         searchPanel.setOpaque(false);
@@ -345,6 +374,9 @@ public class PokemonListPanel extends JPanel {
         return searchPanel;
     }
 
+    /**
+     * Saves the selected Pokémon to a file.
+     */
     private void saveSelectedPokemon() {
         List<Pokemon> selectedPokemon = new ArrayList<>();
         for (int i = 0; i < listModel.size(); i++) {
@@ -375,6 +407,13 @@ public class PokemonListPanel extends JPanel {
                 JOptionPane.INFORMATION_MESSAGE);
     }
 
+    /**
+    * Updates the content of the displayed JList based on a given filtered list of Pokemon.
+    * <p>
+    * Note: This does not change the fullPokemonList data source.
+    *
+    * @param filtered The filtered list of Pokemon to display.
+    */
     private void updateListContent(List<Pokemon> filtered) {
         listModel.clear();
         filtered.forEach(pokemon -> listModel.addElement(new CheckBoxListItem(pokemon)));
