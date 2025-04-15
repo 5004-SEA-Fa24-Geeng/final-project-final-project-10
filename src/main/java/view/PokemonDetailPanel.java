@@ -2,7 +2,6 @@ package view;
 
 import model.Pokemon;
 import model.PokemonType;
-import controller.IPokemonController;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;

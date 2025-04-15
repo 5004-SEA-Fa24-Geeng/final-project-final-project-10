@@ -1,7 +1,7 @@
 package view;
 
-import Model.Pokemon;
-import Model.PokemonType;
+import model.Pokemon;
+import model.PokemonType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
