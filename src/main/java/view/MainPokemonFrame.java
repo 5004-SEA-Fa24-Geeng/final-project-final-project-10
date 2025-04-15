@@ -109,7 +109,6 @@ public class MainPokemonFrame extends JFrame implements IPokemonView {
 
     /**
      * Updates the Pokemon list displayed in the view.
-     * Currently just prints to console since the list panel is not implemented.
      *
      * @param pokemonList the list of Pokemon to display
      */
@@ -121,7 +120,6 @@ public class MainPokemonFrame extends JFrame implements IPokemonView {
 
     /**
      * Shows detailed information about a specific Pokemon.
-     * Currently just prints to console since the detail panel is not implemented.
      *
      * @param pokemon the Pokemon to display details for
      */
