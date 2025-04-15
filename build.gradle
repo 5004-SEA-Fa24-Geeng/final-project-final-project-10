@@ -179,19 +179,6 @@ check.dependsOn jacocoTestCoverageVerification
 // Run code coverage after tests run
 jacocoTestReport.mustRunAfter test
 
-
-task doAll {
-    // Runs a java build. Imported from the java plugin
-    dependsOn build
-    // Runs all the tests. Imported from the java plugin.
-    dependsOn test
-    // Runs pmd. Imported by pmd plugin
-    dependsOn check
-    // Runs java doc. Imported from the java plugin
-    dependsOn javadoc
-    println 'all done!'
-}
-
 test {
     useJUnitPlatform()
     finalizedBy jacocoTestReport
